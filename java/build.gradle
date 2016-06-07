@@ -1,0 +1,59 @@
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+  }
+}
+
+apply plugin: 'java'
+
+// group is the groupId
+group = 'com.gardenia'
+//the default artifactId is the project name, which is per default the directory name of the project
+version = '1.0.0-SNAPSHOT'
+
+description = """sample axolotl app"""
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+    // http://mvnrepository.com/artifact/org.whispersystems/axolotl-java
+    compile group: 'org.whispersystems', name: 'axolotl-java', version: '1.4.3'
+}
+
+// ensure that test resources (src/test/resources) are added to CLASSPATH;
+// see http://forums.gradle.org/gradle/topics/tests_arent_executed_when_setting_the_test_runtimeclasspath and
+// http://gradle.org/docs/current/dsl/org.gradle.api.tasks.testing.Test.html#org.gradle.api.tasks.testing.Test:classpath
+sourceSets {
+  main {
+    runtimeClasspath = files(output.resourcesDir) + runtimeClasspath
+  }
+  test {
+    runtimeClasspath = files(output.resourcesDir) + runtimeClasspath
+  }
+}
+
+test {
+}
+
+// See http://www.gradle.org/docs/current/userguide/gradle_wrapper.html
+task wrapper(type: Wrapper) {
+  description = 'Install Gradle wrapper'
+  gradleVersion = '2.13'
+}
+
+task runApp(type: JavaExec) {
+  classpath = sourceSets.main.runtimeClasspath
+  main = 'com.gardenia.App'
+  standardInput = System.in
+}
+
+task dump {
+    sourceSets.main.compileClasspath.each { println it }
+}
